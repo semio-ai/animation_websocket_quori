@@ -22,8 +22,9 @@ typedef websocketpp::server<websocketpp::config::asio> server;
 class animation_server
 {
 public:
-  animation_server(boost::asio::io_service &service)
-    : seq_(0)
+  animation_server(ros::NodeHandle &nh, boost::asio::io_service &service)
+    : nh_(nh)
+    , seq_(0)
   {
     s_.set_error_channels(websocketpp::log::elevel::all);
     s_.set_access_channels(websocketpp::log::alevel::none);
@@ -31,7 +32,6 @@ public:
 
     s_.set_message_handler(boost::bind(&animation_server::on_message, this, _1, _2));
 
-    ros::NodeHandle nh;
     pub_ = nh.advertise<sensor_msgs::JointState>("joint_states", 5);
   }
 
@@ -76,6 +76,7 @@ private:
     pub_.publish(jointState);
   }
 
+  ros::NodeHandle nh_;
   unsigned int seq_;
   server s_;
   ros::Publisher pub_;
@@ -101,7 +102,9 @@ int main(int argc, char *argv[])
 {
   ros::init(argc, argv, "animation_websocket_quori");
 
-  animation_server server(service);
+  ros::NodeHandle nh;
+
+  animation_server server(nh, service);
   server.run();
 
   queue_spin_ros();
