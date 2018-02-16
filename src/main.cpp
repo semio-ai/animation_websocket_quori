@@ -72,6 +72,8 @@ private:
     jointState.position = joint_values;
     jointState.velocity = zeros;
     jointState.effort = zeros;
+
+    pub_.publish(jointState);
   }
 
   unsigned int seq_;
