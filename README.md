@@ -10,4 +10,6 @@
 
 ## Running
 
+Make sure your catkin workspace is sourced! `source /path_to_catkin_ws/devel/setup.sh`
+
 `rosrun animation_websocket_quori animation_websocket_quori`
